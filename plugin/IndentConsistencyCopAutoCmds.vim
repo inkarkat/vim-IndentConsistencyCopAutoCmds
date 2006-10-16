@@ -12,7 +12,7 @@ endif
 let loaded_indentconsistencycopautocmds = 1
 
 if ! exists('g:indentconsistencycop_filetypes')
-    let g:indentconsistencycop_filetypes = 'ant,c,cpp,cs,csh,css,dosbatch,html,java,javascript,jsp,lisp,pascal,perl,php,python,ruby,scheme,sh,sql,tcsh,txt,vb,vim,xhtml,xml,xsd,xslt,zsh'
+    let g:indentconsistencycop_filetypes = 'ant,c,cpp,cs,csh,css,dosbatch,html,java,javascript,jsp,lisp,pascal,perl,php,python,ruby,scheme,sh,sql,tcsh,vb,vim,xhtml,xml,xsd,xslt,zsh'
 endif
 
 function! s:StartCopBasedOnFiletype( filetype )
@@ -23,14 +23,14 @@ function! s:StartCopBasedOnFiletype( filetype )
 	" autocmd BufWinEnter (which is processed after the modelines), that
 	" will trigger the IndentConsistencyCop and remove itself (i.e. a "run
 	" once" autocmd). 
-	augroup IndentConsistencyCopBuffer
+	augroup IndentConsistencyCopBufferCmds
 	    autocmd!
-	    autocmd BufWinEnter <buffer> echomsg 'TODO: inspecting filetype' |  autocmd! IndentConsistencyCopBuffer * <buffer>
+	    autocmd BufWinEnter <buffer> execute 'IndentConsistencyCop' |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
 	augroup END
     endif
 endfunction
 
-augroup IndentConsistencyCop
+augroup IndentConsistencyCopAutoCmds
     autocmd!
     autocmd FileType * call <SID>StartCopBasedOnFiletype( expand('<amatch>') )
 augroup END
