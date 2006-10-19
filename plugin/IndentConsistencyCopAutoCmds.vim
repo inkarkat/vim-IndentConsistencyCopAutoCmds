@@ -18,14 +18,21 @@ endif
 function! s:StartCopBasedOnFiletype( filetype )
     let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ',' )
     if count( l:activeFiletypes, a:filetype ) > 0
-	" modelines have not been processed yet, but we need them because they
+	" Modelines have not been processed yet, but we need them because they
 	" very likely change the buffer indent settings. So we set up a second
 	" autocmd BufWinEnter (which is processed after the modelines), that
 	" will trigger the IndentConsistencyCop and remove itself (i.e. a "run
 	" once" autocmd). 
 	augroup IndentConsistencyCopBufferCmds
 	    autocmd!
+	    " When a buffer is loaded, the FileType event will fire before the
+	    " BufWinEnter event, so that the IndentConsistencyCop is triggered. 
 	    autocmd BufWinEnter <buffer> execute 'IndentConsistencyCop' |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
+	    " When the filetype changes in an existing buffer, the BufWinEnter
+	    " event is not fired. We use the CursorHold event to trigger the
+	    " IndentConsistencyCop when the user pauses for a brief period.
+	    " (There's no better event for that.)
+	    autocmd CursorHold <buffer> execute 'IndentConsistencyCop' |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
 	augroup END
     endif
 endfunction
