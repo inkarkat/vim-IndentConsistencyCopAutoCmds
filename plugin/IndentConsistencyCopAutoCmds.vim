@@ -1,5 +1,35 @@
 " IndentConsistencyCopAutoCmds.vim: autocmds for IndentConsistencyCop.vim
 "
+" DESCRIPTION:
+"   The autocmds in this script automatically trigger the IndentConsistencyCop
+"   for certain, configurable filetypes (such as c, cpp, html, xml, which
+"   typically contain lots of indented lines) once when you load the file in
+"   VIM. The entire buffer will be checked for inconsistent indentation, and you
+"   will receive a report on its findings. With this automatic background check,
+"   you'll become aware of indentation problems before you start editing. 
+"
+" DEPENDENCIES:
+"   - Requires VIM 7.0. 
+"   - Requires IndentConsistencyCop.vim (vimscript #1690). 
+"
+" USAGE:
+"   Triggering happens automatically; of cause, you can still start the
+"   IndentConsistencyCop ex command to re-check the buffer after changes. 
+"
+"   For very large files, the check may take a couple of seconds. You can abort
+"   the script run with CTRL-C, like any other VIM command. 
+"
+" INSTALLATION:
+"   Put the script into your user or system VIM plugin directory (e.g.
+"   ~/.vim/plugin). 
+"
+" CONFIGURATION:
+"   If you don't like the default filetypes that are inspected, modify the
+"   comma-separated list of filetypes in g:indentconsistencycop_filetypes. 
+"
+" Copyright: (C) 2006 by Ingo Karkat
+"   The VIM LICENSE applies to this script; see ':help copyright'. 
+"
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
@@ -16,7 +46,7 @@ if ! exists('g:indentconsistencycop_filetypes')
 endif
 
 function! s:StartCopBasedOnFiletype( filetype )
-    let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ',' )
+    let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ', *' )
     if count( l:activeFiletypes, a:filetype ) > 0
 	" Modelines have not been processed yet, but we need them because they
 	" very likely change the buffer indent settings. So we set up a second
