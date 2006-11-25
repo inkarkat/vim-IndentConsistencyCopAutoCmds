@@ -19,6 +19,10 @@
 "   For very large files, the check may take a couple of seconds. You can abort
 "   the script run with CTRL-C, like any other VIM command. 
 "
+"   You can disable/re-enable the autocommands with 
+"   :IndentConsistencyCopAutoCmdsOff and :IndentConsistencyCopAutoCmdsOff,
+"   respectively. 
+"
 " INSTALLATION:
 "   Put the script into your user or system VIM plugin directory (e.g.
 "   ~/.vim/plugin). 
@@ -33,6 +37,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"	0.02	25-Nov-2006	Added commands :IndentConsistencyCopAutoCmdsOn
+"				and :IndentConsistencyCopAutoCmdsOff
+"				to re-enable/disable autocommands. 
 "	0.01	16-Oct-2006	file creation
 
 " Avoid installing twice or when in compatible mode
@@ -45,6 +52,7 @@ if ! exists('g:indentconsistencycop_filetypes')
     let g:indentconsistencycop_filetypes = 'ant,c,cpp,cs,csh,css,dosbatch,html,java,javascript,jsp,lisp,pascal,perl,php,python,ruby,scheme,sh,sql,tcsh,vb,vim,wsh,xhtml,xml,xsd,xslt,zsh'
 endif
 
+"- functions ------------------------------------------------------------------
 function! s:StartCopBasedOnFiletype( filetype )
     let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ', *' )
     if count( l:activeFiletypes, a:filetype ) > 0
@@ -67,8 +75,24 @@ function! s:StartCopBasedOnFiletype( filetype )
     endif
 endfunction
 
-augroup IndentConsistencyCopAutoCmds
-    autocmd!
-    autocmd FileType * call <SID>StartCopBasedOnFiletype( expand('<amatch>') )
-augroup END
+function! s:IndentConsistencyCopAutoCmdsOn()
+    augroup IndentConsistencyCopAutoCmds
+	autocmd!
+	autocmd FileType * call <SID>StartCopBasedOnFiletype( expand('<amatch>') )
+    augroup END
+endfunction
+
+function! s:IndentConsistencyCopAutoCmdsOff()
+    augroup IndentConsistencyCopAutoCmds
+	autocmd!
+    augroup END
+    augroup! IndentConsistencyCopAutoCmds
+endfunction
+
+" Enable the autocommands. 
+call s:IndentConsistencyCopAutoCmdsOn()
+
+"- commands -------------------------------------------------------------------
+command! -nargs=0 IndentConsistencyCopAutoCmdsOn call <SID>IndentConsistencyCopAutoCmdsOn()
+command! -nargs=0 IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmdsOff()
 
