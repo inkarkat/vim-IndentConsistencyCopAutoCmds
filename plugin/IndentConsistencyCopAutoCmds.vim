@@ -75,24 +75,19 @@ function! s:StartCopBasedOnFiletype( filetype )
     endif
 endfunction
 
-function! s:IndentConsistencyCopAutoCmdsOn()
+function! s:IndentConsistencyCopAutoCmds(isOn)
     augroup IndentConsistencyCopAutoCmds
 	autocmd!
-	autocmd FileType * call <SID>StartCopBasedOnFiletype( expand('<amatch>') )
+	if a:isOn
+	    autocmd FileType * call <SID>StartCopBasedOnFiletype( expand('<amatch>') )
+	endif
     augroup END
-endfunction
-
-function! s:IndentConsistencyCopAutoCmdsOff()
-    augroup IndentConsistencyCopAutoCmds
-	autocmd!
-    augroup END
-    augroup! IndentConsistencyCopAutoCmds
 endfunction
 
 " Enable the autocommands. 
-call s:IndentConsistencyCopAutoCmdsOn()
+call s:IndentConsistencyCopAutoCmds(1)
 
 "- commands -------------------------------------------------------------------
-command! -nargs=0 IndentConsistencyCopAutoCmdsOn call <SID>IndentConsistencyCopAutoCmdsOn()
-command! -nargs=0 IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmdsOff()
+command! -nargs=0 IndentConsistencyCopAutoCmdsOn call <SID>IndentConsistencyCopAutoCmds(1)
+command! -nargs=0 IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
 
