@@ -8,10 +8,6 @@
 "   will receive a report on its findings. With this automatic background check,
 "   you'll become aware of indentation problems before you start editing. 
 "
-" DEPENDENCIES:
-"   - Requires VIM 7.0. 
-"   - Requires IndentConsistencyCop.vim (vimscript #1690). 
-"
 " USAGE:
 "   Triggering happens automatically; of cause, you can still start the
 "   IndentConsistencyCop ex command to re-check the buffer after changes. 
@@ -26,6 +22,10 @@
 " INSTALLATION:
 "   Put the script into your user or system VIM plugin directory (e.g.
 "   ~/.vim/plugin). 
+"
+" DEPENDENCIES:
+"   - Requires VIM 7.0 or higher. 
+"   - Requires IndentConsistencyCop.vim (vimscript #1690). 
 "
 " CONFIGURATION:
 "   If you don't like the default filetypes that are inspected, modify the
@@ -49,7 +49,7 @@ endif
 let loaded_indentconsistencycopautocmds = 1
 
 if ! exists('g:indentconsistencycop_filetypes')
-    let g:indentconsistencycop_filetypes = 'ant,c,cpp,cs,csh,css,dosbatch,html,java,javascript,jsp,lisp,pascal,perl,php,python,ruby,scheme,sh,sql,tcsh,vb,vim,wsh,xhtml,xml,xsd,xslt,zsh'
+    let g:indentconsistencycop_filetypes = 'ant,c,cpp,cs,csh,css,dosbatch,html,java,javascript,jsp,lisp,pascal,perl,php,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,zsh'
 endif
 
 "- functions ------------------------------------------------------------------
