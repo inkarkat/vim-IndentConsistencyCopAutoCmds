@@ -91,3 +91,4 @@ call s:IndentConsistencyCopAutoCmds(1)
 command! -nargs=0 IndentConsistencyCopAutoCmdsOn call <SID>IndentConsistencyCopAutoCmds(1)
 command! -nargs=0 IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
 
+" vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
