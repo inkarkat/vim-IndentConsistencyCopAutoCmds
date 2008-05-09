@@ -37,7 +37,11 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
-"	0.02	25-Nov-2006	Added commands :IndentConsistencyCopAutoCmdsOn
+"   1.10.003	21-Feb-2008	Avoiding multiple invocations of the
+"				IndentConsistencyCop when reloading or switching
+"				buffers. Now there's only one check per file and
+"				VIM session. 
+"   1.00.002	25-Nov-2006	Added commands :IndentConsistencyCopAutoCmdsOn
 "				and :IndentConsistencyCopAutoCmdsOff
 "				to re-enable/disable autocommands. 
 "	0.01	16-Oct-2006	file creation
@@ -53,6 +57,25 @@ if ! exists('g:indentconsistencycop_filetypes')
 endif
 
 "- functions ------------------------------------------------------------------
+function! s:StartCopOnce()
+    " The straightforward way to ensure that the Cop is called only once per
+    " file is to hook into the BufRead event. We cannot do this, because at that
+    " point modelines haven't been set yet and the filetype hasn't been
+    " determined. 
+    " Although the BufWinEnter hook removes itself after execution, it may still
+    " be triggered multiple times in a VIM session, e.g. when switching buffers
+    " (alternate file, or :next, ...) or when a plugin (like FencView) reloads
+    " the buffer with changed settings.
+    " Thus, we set a buffer-local flag. This ensures that the Cop is really only
+    " called once per file in a VIM session, even when the buffer is reloaded
+    " via :e!. (Only :bd and :e <file> will create a fresh buffer and cause a
+    " new Cop run.) 
+    if ! exists('b:indentconsistencycop_is_checked')
+	let b:indentconsistencycop_is_checked = 1
+	execute 'IndentConsistencyCop'
+    endif
+endfunction
+
 function! s:StartCopBasedOnFiletype( filetype )
     let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ', *' )
     if count( l:activeFiletypes, a:filetype ) > 0
@@ -65,12 +88,12 @@ function! s:StartCopBasedOnFiletype( filetype )
 	    autocmd!
 	    " When a buffer is loaded, the FileType event will fire before the
 	    " BufWinEnter event, so that the IndentConsistencyCop is triggered. 
-	    autocmd BufWinEnter <buffer> execute 'IndentConsistencyCop' |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
+	    autocmd BufWinEnter <buffer> call s:StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
 	    " When the filetype changes in an existing buffer, the BufWinEnter
 	    " event is not fired. We use the CursorHold event to trigger the
 	    " IndentConsistencyCop when the user pauses for a brief period.
 	    " (There's no better event for that.)
-	    autocmd CursorHold <buffer> execute 'IndentConsistencyCop' |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
+	    autocmd CursorHold <buffer> call s:StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
 	augroup END
     endif
 endfunction
