@@ -88,12 +88,12 @@ function! s:StartCopBasedOnFiletype( filetype )
 	    autocmd!
 	    " When a buffer is loaded, the FileType event will fire before the
 	    " BufWinEnter event, so that the IndentConsistencyCop is triggered. 
-	    autocmd BufWinEnter <buffer> call s:StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
+	    autocmd BufWinEnter <buffer> call <SID>StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
 	    " When the filetype changes in an existing buffer, the BufWinEnter
 	    " event is not fired. We use the CursorHold event to trigger the
 	    " IndentConsistencyCop when the user pauses for a brief period.
 	    " (There's no better event for that.)
-	    autocmd CursorHold <buffer> call s:StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
+	    autocmd CursorHold <buffer> call <SID>StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
 	augroup END
     endif
 endfunction
