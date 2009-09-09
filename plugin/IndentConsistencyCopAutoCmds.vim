@@ -28,8 +28,10 @@
 "   - Requires IndentConsistencyCop.vim (vimscript #1690). 
 "
 " CONFIGURATION:
-"   If you don't like the default filetypes that are inspected, modify the
-"   comma-separated list of filetypes in g:indentconsistencycop_filetypes. 
+"					      *g:indentconsistencycop_filetypes*
+"   If you don't like the default filetypes that are inspected, define your own
+"   comma-separated list of filetypes in g:indentconsistencycop_filetypes and
+"   put this setting into your vimrc file (see :help vimrc). 
 "
 " Copyright: (C) 2006-2008 by Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
