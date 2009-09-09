@@ -79,7 +79,16 @@ function! s:StartCopOnce()
 	execute 'IndentConsistencyCop'
     endif
 endfunction
-
+function! s:InstallAutoCmd( events, isStartOnce )
+    augroup IndentConsistencyCopBufferCmds
+	let l:autocmd = 'IndentConsistencyCopBufferCmds ' . join(a:events, ',') . ' <buffer>'
+	if a:isStartOnce
+	    execute 'autocmd' l:autocmd 'call <SID>StartCopOnce() |  autocmd!' l:autocmd
+	else
+	    execute 'autocmd' l:autocmd 'IndentConsistencyCop'
+	endif
+    augroup END
+endfunction
 function! s:StartCopBasedOnFiletype( filetype )
     let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ', *' )
     if count( l:activeFiletypes, a:filetype ) > 0
@@ -88,17 +97,15 @@ function! s:StartCopBasedOnFiletype( filetype )
 	" autocmd BufWinEnter (which is processed after the modelines), that
 	" will trigger the IndentConsistencyCop and remove itself (i.e. a "run
 	" once" autocmd). 
-	augroup IndentConsistencyCopBufferCmds
-	    autocmd!
-	    " When a buffer is loaded, the FileType event will fire before the
-	    " BufWinEnter event, so that the IndentConsistencyCop is triggered. 
-	    autocmd BufWinEnter <buffer> call <SID>StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
-	    " When the filetype changes in an existing buffer, the BufWinEnter
-	    " event is not fired. We use the CursorHold event to trigger the
-	    " IndentConsistencyCop when the user pauses for a brief period.
-	    " (There's no better event for that.)
-	    autocmd CursorHold <buffer> call <SID>StartCopOnce() |  autocmd! IndentConsistencyCopBufferCmds * <buffer>
-	augroup END
+	" When a buffer is loaded, the FileType event will fire before the
+	" BufWinEnter event, so that the IndentConsistencyCop is triggered. 
+	" When the filetype changes in an existing buffer, the BufWinEnter
+	" event is not fired. We use the CursorHold event to trigger the
+	" IndentConsistencyCop when the user pauses for a brief period.
+	" (There's no better event for that.)
+	call s:InstallAutoCmd(['BufWinEnter', 'CursorHold'], 1)
+	call s:InstallAutoCmd(['BufWritePost'], 0)
+"****D execute 'autocmd IndentConsistencyCopBufferCmds' | call confirm("Active IndentConsistencyCopBufferCmds")
     endif
 endfunction
 
