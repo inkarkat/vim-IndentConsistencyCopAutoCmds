@@ -47,12 +47,16 @@
 "   (to the system's performance and personal level of patience): >
 "	let g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck = 1000
 "
-" Copyright: (C) 2006-2009 by Ingo Karkat
+" Copyright: (C) 2006-2010 by Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.20.007	30-Dec-2010	BUG: :IndentConsistencyCopAutoCmdsOff only works
+"				for future buffers, but does not turn off the
+"				cop in existing buffers. Must remove all
+"				buffer-local autocmds, too. 
 "   1.20.006	16-Sep-2009	BUG: The same buffer-local autocmd could be
 "				created multiple times when the filetype is set
 "				repeatedly. 
@@ -171,6 +175,10 @@ function! s:IndentConsistencyCopAutoCmds(isOn)
 	    autocmd FileType * call <SID>StartCopBasedOnFiletype( expand('<amatch>') )
 	endif
     augroup END
+
+    if ! a:isOn
+	autocmd! IndentConsistencyCopBufferCmds
+    endif
 endfunction
 
 " Enable the autocommands. 
