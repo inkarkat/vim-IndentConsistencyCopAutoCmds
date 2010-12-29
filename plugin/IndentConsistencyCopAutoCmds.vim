@@ -53,6 +53,9 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.20.006	16-Sep-2009	BUG: The same buffer-local autocmd could be
+"				created multiple times when the filetype is set
+"				repeatedly. 
 "   1.20.005	10-Sep-2009	BUG: By clearing the entire
 "				"IndentConsistencyCopBufferCmds" augroup,
 "				pending autocmds for other buffers were deleted
@@ -131,6 +134,7 @@ endfunction
 function! s:InstallAutoCmd( events, isStartOnce )
     augroup IndentConsistencyCopBufferCmds
 	let l:autocmd = 'IndentConsistencyCopBufferCmds ' . join(a:events, ',') . ' <buffer>'
+	execute 'autocmd!' l:autocmd
 	if a:isStartOnce
 	    execute 'autocmd' l:autocmd 'call <SID>StartCopOnce() |  autocmd!' l:autocmd
 	else
