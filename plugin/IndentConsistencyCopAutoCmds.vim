@@ -1,4 +1,4 @@
-" IndentConsistencyCopAutoCmds.vim: autocmds for IndentConsistencyCop.vim
+" IndentConsistencyCopAutoCmds.vim: autocmds for IndentConsistencyCop
 "
 " DESCRIPTION:
 "   The autocmds in this script automatically trigger the IndentConsistencyCop
@@ -53,10 +53,18 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
-"   1.20.007	30-Dec-2010	BUG: :IndentConsistencyCopAutoCmdsOff only works
+"   1.30.007	30-Dec-2010	BUG: :IndentConsistencyCopAutoCmdsOff only works
 "				for future buffers, but does not turn off the
 "				cop in existing buffers. Must remove all
 "				buffer-local autocmds, too. 
+"				ENH: Do not invoke the IndentConsistencyCop if
+"				the user chose to ignore the cop's report of an
+"				inconsistency. Requires
+"				b:indentconsistencycop_result.isIgnore flag
+"				introduced in IndentConsistencyCop 1.21. 
+"				ENH: Only check indent consistency after a write
+"				of the buffer, not consistency with buffer
+"				settings. 
 "   1.20.006	16-Sep-2009	BUG: The same buffer-local autocmd could be
 "				created multiple times when the filetype is set
 "				repeatedly. 
@@ -101,7 +109,7 @@ if ! exists('g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck')
 endif
 
 "- functions ------------------------------------------------------------------
-function! s:StartCopOnce()
+function! s:StartCopOnce( copCommand )
     " The straightforward way to ensure that the Cop is called only once per
     " file is to hook into the BufRead event. We cannot do this, because at that
     " point modelines haven't been set yet and the filetype hasn't been
@@ -116,10 +124,16 @@ function! s:StartCopOnce()
     " new Cop run.) 
     if ! exists('b:indentconsistencycop_is_checked')
 	let b:indentconsistencycop_is_checked = 1
-	execute 'IndentConsistencyCop'
+	execute a:copCommand
     endif
 endfunction
-function! s:StartCopAfterWrite()
+function! s:StartCopAfterWrite( copCommand )
+    " Do not invoke the IndentConsistencyCop if the user chose to ignore the
+    " cop's report of an inconsistency. 
+    if exists('b:indentconsistencycop_result') && get(b:indentconsistencycop_result, 'isIgnore', 0)
+	return
+    endif
+
     " As long as the IndentConsistencyCop can finish its job without noticeable
     " delay (which we'll estimate based on the number of lines in the current
     " buffer), invoke it directly after the buffer write. 
@@ -129,20 +143,20 @@ function! s:StartCopAfterWrite()
     " inspection. (He can always abort via CTRL-C.) 
     if line('$') <= g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck
 	let b:indentconsistencycop_is_checked = 1
-	execute 'IndentConsistencyCop'
+	execute a:copCommand
     else
 	unlet! b:indentconsistencycop_is_checked
-	call s:InstallAutoCmd(['CursorHold'], 1)
+	call s:InstallAutoCmd(a:copCommand, ['CursorHold'], 1)
     endif
 endfunction
-function! s:InstallAutoCmd( events, isStartOnce )
+function! s:InstallAutoCmd( copCommand, events, isStartOnce )
     augroup IndentConsistencyCopBufferCmds
 	let l:autocmd = 'IndentConsistencyCopBufferCmds ' . join(a:events, ',') . ' <buffer>'
 	execute 'autocmd!' l:autocmd
 	if a:isStartOnce
-	    execute 'autocmd' l:autocmd 'call <SID>StartCopOnce() |  autocmd!' l:autocmd
+	    execute 'autocmd' l:autocmd 'call <SID>StartCopOnce(' . string(a:copCommand) . ') |  autocmd!' l:autocmd
 	else
-	    execute 'autocmd' l:autocmd 'call <SID>StartCopAfterWrite()'
+	    execute 'autocmd' l:autocmd 'call <SID>StartCopAfterWrite(' . string(a:copCommand) . ')'
 	endif
     augroup END
 endfunction
@@ -160,9 +174,17 @@ function! s:StartCopBasedOnFiletype( filetype )
 	" event is not fired. We use the CursorHold event to trigger the
 	" IndentConsistencyCop when the user pauses for a brief period.
 	" (There's no better event for that.)
-	call s:InstallAutoCmd(['BufWinEnter', 'CursorHold'], 1)
+	
+	" Check both indent consistency and consistency with buffer indent
+	" settings when a file is loaded. 
+	call s:InstallAutoCmd('IndentConsistencyCop', ['BufWinEnter', 'CursorHold'], 1)
 	if g:indentconsistencycop_CheckAfterWrite
-	    call s:InstallAutoCmd(['BufWritePost'], 0)
+	    " Only check indent consistency after a write of the buffer. The
+	    " user already was alerted to inconsistent buffer settings when the
+	    " file was loaded; editing the file did't change anything in that
+	    " regard, so we'd better not bother the user with this information
+	    " repeatedly. 
+	    call s:InstallAutoCmd('IndentRangeConsistencyCop', ['BufWritePost'], 0)
 	endif
 "****D execute 'autocmd IndentConsistencyCopBufferCmds' | call confirm("Active IndentConsistencyCopBufferCmds")
     endif
