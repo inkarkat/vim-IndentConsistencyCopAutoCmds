@@ -1,51 +1,8 @@
 " IndentConsistencyCopAutoCmds.vim: autocmds for IndentConsistencyCop
 "
-" DESCRIPTION:
-"   The autocmds in this script automatically trigger the IndentConsistencyCop
-"   for certain, configurable filetypes (such as c, cpp, html, xml, ... which
-"   typically contain lots of indented lines) once when you load the file in
-"   Vim, and (optionally) also on every write of the buffer. The entire buffer
-"   will be checked for inconsistent indentation, and you will receive a report
-"   on its findings. With this automatic background check, you'll become aware
-"   of indentation problems before you start editing and in case you
-"   accidentally introduce an inconsistency. 
-"
-" USAGE:
-"   Triggering happens automatically; of course, you can still execute the
-"   :IndentConsistencyCop ex command to re-check the buffer after changes. 
-"
-"   For very large files, the check may take a couple of seconds. You can abort
-"   the script run with CTRL-C, like any other Vim command. 
-"
-"   You can disable/re-enable the autocommands with 
-"   :IndentConsistencyCopAutoCmdsOff and :IndentConsistencyCopAutoCmdsOff,
-"   respectively. 
-"
-" INSTALLATION:
-"   Put the script into your user or system Vim plugin directory (e.g.
-"   ~/.vim/plugin). 
-"
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher. 
 "   - Requires IndentConsistencyCop.vim (vimscript #1690). 
-"
-" CONFIGURATION:
-"					      *g:indentconsistencycop_filetypes*
-"   If you don't like the default filetypes that are inspected, define your own
-"   comma-separated list of filetypes in g:indentconsistencycop_filetypes and
-"   put this setting into your vimrc file (see :help vimrc). 
-"
-"					*g:indentconsistencycop_CheckAfterWrite*
-"   Turn off the IndentConsistencyCop run after each write via >
-"	let g:indentconsistencycop_CheckAfterWrite = 0
-"   The IndentConsistencyCop will only run once after loading a file. 
-"
-"	       *g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck*
-"   To avoid blocking the user whenever a large buffer is written, the
-"   IndentConsistencyCop is only scheduled to run on the next 'CursorHold'
-"   event in case the buffer contains many lines. The threshold can be adjusted
-"   (to the system's performance and personal level of patience): >
-"	let g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck = 1000
 "
 " Copyright: (C) 2006-2010 by Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'. 
@@ -92,10 +49,10 @@
 "	0.01	16-Oct-2006	file creation
 
 " Avoid installing twice or when in unsupported version. 
-if exists("loaded_indentconsistencycopautocmds") || (v:version < 700)
+if exists('g:loaded_indentconsistencycopautocmds') || (v:version < 700)
     finish
 endif
-let loaded_indentconsistencycopautocmds = 1
+let g:loaded_indentconsistencycopautocmds = 1
 
 "- configuration --------------------------------------------------------------
 if ! exists('g:indentconsistencycop_filetypes')
