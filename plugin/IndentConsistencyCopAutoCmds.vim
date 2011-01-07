@@ -10,6 +10,10 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS 
+"   1.30.008	31-Dec-2010	Allowing to just run indent consistency check,
+"				not buffer settings at all times via
+"				g:indentconsistencycop_AutoRunCmd. 
+"				Split off documentation into separate help file. 
 "   1.30.007	30-Dec-2010	BUG: :IndentConsistencyCopAutoCmdsOff only works
 "				for future buffers, but does not turn off the
 "				cop in existing buffers. Must remove all
@@ -64,6 +68,10 @@ endif
 if ! exists('g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck')
     let g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck = 1000
 endif
+if ! exists('g:indentconsistencycop_AutoRunCmd')
+    let g:indentconsistencycop_AutoRunCmd = 'IndentConsistencyCop'
+endif
+
 
 "- functions ------------------------------------------------------------------
 function! s:StartCopOnce( copCommand )
@@ -134,7 +142,7 @@ function! s:StartCopBasedOnFiletype( filetype )
 	
 	" Check both indent consistency and consistency with buffer indent
 	" settings when a file is loaded. 
-	call s:InstallAutoCmd('IndentConsistencyCop', ['BufWinEnter', 'CursorHold'], 1)
+	call s:InstallAutoCmd(g:indentconsistencycop_AutoRunCmd, ['BufWinEnter', 'CursorHold'], 1)
 	if g:indentconsistencycop_CheckAfterWrite
 	    " Only check indent consistency after a write of the buffer. The
 	    " user already was alerted to inconsistent buffer settings when the
@@ -163,8 +171,9 @@ endfunction
 " Enable the autocommands. 
 call s:IndentConsistencyCopAutoCmds(1)
 
+
 "- commands -------------------------------------------------------------------
-command! -bar -nargs=0 IndentConsistencyCopAutoCmdsOn call <SID>IndentConsistencyCopAutoCmds(1)
-command! -bar -nargs=0 IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
+command! -bar IndentConsistencyCopAutoCmdsOn  call <SID>IndentConsistencyCopAutoCmds(1)
+command! -bar IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
 
 " vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
