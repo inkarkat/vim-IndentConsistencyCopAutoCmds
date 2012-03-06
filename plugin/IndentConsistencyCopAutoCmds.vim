@@ -181,4 +181,4 @@ call s:IndentConsistencyCopAutoCmds(1)
 command! -bar IndentConsistencyCopAutoCmdsOn  call <SID>IndentConsistencyCopAutoCmds(1)
 command! -bar IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
 
-" vim: set sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
+" vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
