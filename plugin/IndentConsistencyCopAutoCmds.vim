@@ -16,6 +16,9 @@
 "				--cmd "let g:loaded_indentconsistencycop = 1" by
 "				checking for the existence of the command in the
 "				definition of the autocmds.
+"				Do not define the commands when the
+"				IndentConsistencyCop command has not been
+"				defined.
 "   1.31.009	08-Jan-2011	BUG: "E216: No such group or event:
 "				IndentConsistencyCopBufferCmds" on
 "				:IndentConsistencyCopAutoCmdsOff. Using :silent
@@ -167,9 +170,12 @@ function! s:StartCopBasedOnFiletype( filetype )
 "****D execute 'autocmd IndentConsistencyCopBufferCmds' | call confirm("Active IndentConsistencyCopBufferCmds")
     endif
 endfunction
+function! s:ExistsIndentConsistencyCop()
+    return exists(':IndentConsistencyCop') == 2
+endfunction
 
 function! s:IndentConsistencyCopAutoCmds( isOn )
-    let l:isEnable = a:isOn && exists(':IndentConsistencyCop') == 2
+    let l:isEnable = a:isOn && s:ExistsIndentConsistencyCop()
     augroup IndentConsistencyCopAutoCmds
 	autocmd!
 	if l:isEnable
@@ -188,7 +194,9 @@ call s:IndentConsistencyCopAutoCmds(1)
 
 "- commands -------------------------------------------------------------------
 
-command! -bar IndentConsistencyCopAutoCmdsOn  call <SID>IndentConsistencyCopAutoCmds(1)
-command! -bar IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
+if s:ExistsIndentConsistencyCop()
+    command! -bar IndentConsistencyCopAutoCmdsOn  call <SID>IndentConsistencyCopAutoCmds(1)
+    command! -bar IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
+endif
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
