@@ -10,6 +10,12 @@
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.41.012	23-Oct-2012	ENH: Allow skipping automatic checks for certain
+"				buffers (i.e. not globally disabling the checks
+"				via :IndentConsistencyCopAutoCmdsOff),
+"				configured for example by a directory-local
+"				vimrc, via new b:indentconsistencycop_SkipChecks
+"				setting.
 "   1.40.011	26-Sep-2012	ENH: Allow check only on buffer writes by
 "                               clearing new config flag
 "                               g:indentconsistencycop_CheckOnLoad. This comes
@@ -104,6 +110,11 @@ endif
 "- functions ------------------------------------------------------------------
 
 function! s:StartCopOnce( copCommand )
+    if exists('b:indentconsistencycop_SkipChecks') && b:indentconsistencycop_SkipChecks
+	" The user explicitly disabled checking for this buffer.
+	return
+    endif
+
     " The straightforward way to ensure that the Cop is called only once per
     " file is to hook into the BufRead event. We cannot do this, because at that
     " point modelines haven't been set yet and the filetype hasn't been
@@ -122,6 +133,11 @@ function! s:StartCopOnce( copCommand )
     endif
 endfunction
 function! s:StartCopAfterWrite( copCommand )
+    if exists('b:indentconsistencycop_SkipChecks') && b:indentconsistencycop_SkipChecks
+	" The user explicitly disabled checking for this buffer.
+	return
+    endif
+
     " Do not invoke the IndentConsistencyCop if the user chose to ignore the
     " cop's report of an inconsistency.
     if exists('b:indentconsistencycop_result') && get(b:indentconsistencycop_result, 'isIgnore', 0)
@@ -143,6 +159,7 @@ function! s:StartCopAfterWrite( copCommand )
 	call s:InstallAutoCmd(a:copCommand, ['CursorHold'], 1)
     endif
 endfunction
+
 function! s:InstallAutoCmd( copCommand, events, isStartOnce )
     augroup IndentConsistencyCopBufferCmds
 	let l:autocmd = 'IndentConsistencyCopBufferCmds ' . join(a:events, ',') . ' <buffer>'
