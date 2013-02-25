@@ -111,6 +111,7 @@ If you don't want the check for consistency with the buffer settings, set >
 ==============================================================================
 INTEGRATION			    *IndentConsistencyCopAutoCmds-integration*
 
+					   *b:indentconsistencycop_SkipChecks*
 If you want to disable the automatic checks for certain buffers only, without
 turning off the IndentConsistencyCop completely through
 |:IndentConsistencyCopAutoCmdsOff| or for certain filetypes by adapting
