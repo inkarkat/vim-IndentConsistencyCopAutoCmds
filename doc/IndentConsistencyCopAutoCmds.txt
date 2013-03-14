@@ -131,7 +131,11 @@ IDEAS					  *IndentConsistencyCopAutoCmds-ideas*
 ==============================================================================
 HISTORY					*IndentConsistencyCopAutoCmds-history*
 
-1.41	23-Oct-2012
+1.42	27-Feb-2013
+When the persistence of the buffer fails (e.g. with "E212: Cannot open for
+writing"), don't run the cop; its messages may obscure the write error.
+
+1.41	23-Oct-2012 (unreleased)
 ENH: Allow skipping automatic checks for certain buffers (i.e. not globally
 disabling the checks via :IndentConsistencyCopAutoCmdsOff), configured for
 example by a directory-local vimrc, via new b:indentconsistencycop_SkipChecks
@@ -199,7 +203,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2006-2012 Ingo Karkat
+Copyright: (C) 2006-2013 Ingo Karkat
 The VIM LICENSE applies to this script; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
