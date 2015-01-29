@@ -74,7 +74,7 @@ For a permanent configuration, put the following commands into your |vimrc|:
 					    *g:indentconsistencycop_filetypes*
 If you don't like the default filetypes that are inspected, define your own
 comma-separated list of filetypes or add to the existing ones: >
-    let g:indentconsistencycop_filetypes = 'ant,c,cpp,cs,csh,css,dosbatch,html,java,javascript,jsp,lisp,pascal,perl,php,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,zsh'
+    let g:indentconsistencycop_filetypes = 'c,cpp,java,javascript,perl,php,python,ruby,sh,tcsh,vim'
     let g:indentconsistencycop_filetypes .= ',perl6'
 <
 					  *g:indentconsistencycop_CheckOnLoad*
@@ -130,6 +130,9 @@ IDEAS					  *IndentConsistencyCopAutoCmds-ideas*
 
 ==============================================================================
 HISTORY					*IndentConsistencyCopAutoCmds-history*
+
+1.43	RELEASEME
+- Add several more filetypes to g:indentconsistencycop_filetypes.
 
 1.42	27-Feb-2013
 When the persistence of the buffer fails (e.g. with "E212: Cannot open for
@@ -203,7 +206,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2006-2013 Ingo Karkat
+Copyright: (C) 2006-2014 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
