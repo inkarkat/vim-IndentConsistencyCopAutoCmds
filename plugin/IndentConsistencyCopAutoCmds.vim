@@ -3,14 +3,19 @@
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
 "   - Requires IndentConsistencyCop.vim (vimscript #1690).
+"   - ingo/plugin.vim autoload script
 "
-" Copyright: (C) 2006-2014 Ingo Karkat
+" Copyright: (C) 2006-2015 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
-"   1.43.014	13-Jun-2014	Add several more filetypes to
+"   1.45.015	30-Jan-2015	Allow buffer-local config for
+"				indentconsistencycop_CheckOnLoad,
+"				indentconsistencycop_CheckAfterWrite,
+"				indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck.
+"   1.45.014	13-Jun-2014	Add several more filetypes to
 "				g:indentconsistencycop_filetypes.
 "   1.42.013	26-Feb-2013	When the persistence of the buffer fails (e.g.
 "				with "E212: Cannot open for writing"), don't run
@@ -164,7 +169,7 @@ function! s:StartCopAfterWrite( copCommand, event )
     " on the next 'CursorHold' event, hoping that the user is then away, busy
     " reading, or just looking out of the window... and won't mind the
     " inspection. (He can always abort via CTRL-C.)
-    if line('$') <= g:indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck
+    if line('$') <= ingo#plugin#setting#GetBufferLocal('indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck')
 	execute a:copCommand
 	let b:indentconsistencycop_is_checked = 1
     else
@@ -200,13 +205,14 @@ function! s:StartCopBasedOnFiletype( filetype )
 	" IndentConsistencyCop when the user pauses for a brief period.
 	" (There's no better event for that.)
 
-	if g:indentconsistencycop_CheckOnLoad
+	let l:isCheckOnLoad = ingo#plugin#setting#GetBufferLocal('indentconsistencycop_CheckOnLoad')
+	if l:isCheckOnLoad
 	    " Check both indent consistency and consistency with buffer indent
 	    " settings when a file is loaded.
 	    call s:InstallAutoCmd(g:indentconsistencycop_AutoRunCmd, ['BufWinEnter', 'CursorHold'], 1)
 	endif
-	if g:indentconsistencycop_CheckAfterWrite
-	    if g:indentconsistencycop_CheckOnLoad
+	if ingo#plugin#setting#GetBufferLocal('indentconsistencycop_CheckAfterWrite')
+	    if l:isCheckOnLoad
 		" Only check indent consistency after a write of the buffer. The
 		" user already was alerted to inconsistent buffer settings when
 		" the file was loaded; editing the file did't change anything in
