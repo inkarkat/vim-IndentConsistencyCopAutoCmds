@@ -4,12 +4,14 @@
 "   - Requires Vim 7.0 or higher.
 "   - Requires IndentConsistencyCop.vim (vimscript #1690).
 "
-" Copyright: (C) 2006-2013 Ingo Karkat
+" Copyright: (C) 2006-2014 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.43.014	13-Jun-2014	Add several more filetypes to
+"				g:indentconsistencycop_filetypes.
 "   1.42.013	26-Feb-2013	When the persistence of the buffer fails (e.g.
 "				with "E212: Cannot open for writing"), don't run
 "				the cop; its messages may obscure the write
@@ -95,7 +97,7 @@ let g:loaded_indentconsistencycopautocmds = 1
 "- configuration --------------------------------------------------------------
 
 if ! exists('g:indentconsistencycop_filetypes')
-    let g:indentconsistencycop_filetypes = 'ant,c,cpp,cs,csh,css,dosbatch,html,java,javascript,jsp,lisp,pascal,perl,php,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,zsh'
+    let g:indentconsistencycop_filetypes = 'actionscript,ant,atom,c,cpp,cs,csh,css,dosbatch,groovy,gsp,html,java,javascript,json,jsp,lisp,mxml,pascal,perl,php,ps1,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,zsh'
 endif
 if ! exists('g:indentconsistencycop_CheckOnLoad')
     let g:indentconsistencycop_CheckOnLoad = 1
