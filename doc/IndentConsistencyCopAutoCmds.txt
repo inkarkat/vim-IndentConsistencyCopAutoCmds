@@ -133,6 +133,9 @@ IDEAS					  *IndentConsistencyCopAutoCmds-ideas*
 ==============================================================================
 HISTORY					*IndentConsistencyCopAutoCmds-history*
 
+1.46	RELEASEME
+- Add yaml filetype to g:indentconsistencycop_filetypes.
+
 1.45	09-Feb-2015
 - Add several more filetypes to g:indentconsistencycop_filetypes.
 - FIX: Install of continuous buffer autocmd never worked because of missing
@@ -215,7 +218,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2006-2015 Ingo Karkat
+Copyright: (C) 2006-2016 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
