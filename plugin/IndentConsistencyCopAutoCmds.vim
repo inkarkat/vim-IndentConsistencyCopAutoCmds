@@ -15,6 +15,8 @@
 "				indentconsistencycop_CheckOnLoad,
 "				indentconsistencycop_CheckAfterWrite,
 "				indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck.
+"				FIX: Install of continuous buffer autocmd never
+"				worked because of missing <buffer> target.
 "   1.45.014	13-Jun-2014	Add several more filetypes to
 "				g:indentconsistencycop_filetypes.
 "   1.42.013	26-Feb-2013	When the persistence of the buffer fails (e.g.
@@ -185,7 +187,7 @@ function! s:InstallAutoCmd( copCommand, events, isStartOnce )
 	    execute l:autocmd 'call <SID>StartCopOnce(' . string(a:copCommand) . ') |' l:autocmd
 	else
 	    for l:event in a:events
-		execute printf('autocmd! IndentConsistencyCopBufferCmds %s call <SID>StartCopAfterWrite(%s, %s)', l:event, string(a:copCommand), string(l:event))
+		execute printf('autocmd! IndentConsistencyCopBufferCmds %s <buffer> call <SID>StartCopAfterWrite(%s, %s)', l:event, string(a:copCommand), string(l:event))
 	    endfor
 	endif
     augroup END
