@@ -133,7 +133,7 @@ IDEAS					  *IndentConsistencyCopAutoCmds-ideas*
 ==============================================================================
 HISTORY					*IndentConsistencyCopAutoCmds-history*
 
-1.45	RELEASEME
+1.45	09-Feb-2015
 - Add several more filetypes to g:indentconsistencycop_filetypes.
 - FIX: Install of continuous buffer autocmd never worked because of missing
   <buffer> target.
