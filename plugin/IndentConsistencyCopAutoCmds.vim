@@ -5,12 +5,14 @@
 "   - Requires IndentConsistencyCop.vim (vimscript #1690).
 "   - ingo/plugin.vim autoload script
 "
-" Copyright: (C) 2006-2015 Ingo Karkat
+" Copyright: (C) 2006-2016 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 "
 " REVISION	DATE		REMARKS
+"   1.46.016	03-Aug-2016	Add yaml filetype to
+"				g:indentconsistencycop_filetypes.
 "   1.45.015	30-Jan-2015	Allow buffer-local config for
 "				indentconsistencycop_CheckOnLoad,
 "				indentconsistencycop_CheckAfterWrite,
@@ -104,7 +106,7 @@ let g:loaded_indentconsistencycopautocmds = 1
 "- configuration --------------------------------------------------------------
 
 if ! exists('g:indentconsistencycop_filetypes')
-    let g:indentconsistencycop_filetypes = 'actionscript,ant,atom,c,cpp,cs,csh,css,dosbatch,groovy,gsp,html,java,javascript,json,jsp,lisp,mxml,pascal,perl,php,ps1,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,zsh'
+    let g:indentconsistencycop_filetypes = 'actionscript,ant,atom,c,cpp,cs,csh,css,dosbatch,groovy,gsp,html,java,javascript,json,jsp,lisp,mxml,pascal,perl,php,ps1,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,yaml,zsh'
 endif
 if ! exists('g:indentconsistencycop_CheckOnLoad')
     let g:indentconsistencycop_CheckOnLoad = 1
