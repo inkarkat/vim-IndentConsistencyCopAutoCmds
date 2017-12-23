@@ -5,97 +5,10 @@
 "   - Requires IndentConsistencyCop.vim (vimscript #1690).
 "   - ingo/plugin.vim autoload script
 "
-" Copyright: (C) 2006-2016 Ingo Karkat
+" Copyright: (C) 2006-2017 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
-"
-" REVISION	DATE		REMARKS
-"   1.46.016	03-Aug-2016	Add yaml filetype to
-"				g:indentconsistencycop_filetypes.
-"   1.45.015	30-Jan-2015	Allow buffer-local config for
-"				indentconsistencycop_CheckOnLoad,
-"				indentconsistencycop_CheckAfterWrite,
-"				indentconsistencycop_CheckAfterWriteMaxLinesForImmediateCheck.
-"				FIX: Install of continuous buffer autocmd never
-"				worked because of missing <buffer> target.
-"   1.45.014	13-Jun-2014	Add several more filetypes to
-"				g:indentconsistencycop_filetypes.
-"   1.42.013	26-Feb-2013	When the persistence of the buffer fails (e.g.
-"				with "E212: Cannot open for writing"), don't run
-"				the cop; its messages may obscure the write
-"				error.
-"   1.41.012	23-Oct-2012	ENH: Allow skipping automatic checks for certain
-"				buffers (i.e. not globally disabling the checks
-"				via :IndentConsistencyCopAutoCmdsOff),
-"				configured for example by a directory-local
-"				vimrc, via new b:indentconsistencycop_SkipChecks
-"				setting.
-"   1.40.011	26-Sep-2012	ENH: Allow check only on buffer writes by
-"                               clearing new config flag
-"                               g:indentconsistencycop_CheckOnLoad. This comes
-"                               with the risk of introducing indent
-"                               inconsistencies until the first write, but on
-"                               the other hand avoids alerts when just viewing
-"                               file(s) (especially when restoring a saved
-"                               session with multiple files; though one could
-"                               also temporarily disable the autocmds in that
-"                               case). Suggested by Marcelo Montu.
-"   1.32.010	07-Mar-2012	Avoid "E464: Ambiguous use of user-defined
-"				command: IndentConsistencyCop" when loading of
-"				the IndentConsistencyCop has been suppressed via
-"				--cmd "let g:loaded_indentconsistencycop = 1" by
-"				checking for the existence of the command in the
-"				definition of the autocmds.
-"				Do not define the commands when the
-"				IndentConsistencyCop command has not been
-"				defined.
-"   1.31.009	08-Jan-2011	BUG: "E216: No such group or event:
-"				IndentConsistencyCopBufferCmds" on
-"				:IndentConsistencyCopAutoCmdsOff. Using :silent
-"				to suppress this error when the group doesn't
-"				exist.
-"   1.30.008	31-Dec-2010	Allowing to just run indent consistency check,
-"				not buffer settings at all times via
-"				g:indentconsistencycop_AutoRunCmd.
-"				Split off documentation into separate help file.
-"   1.30.007	30-Dec-2010	BUG: :IndentConsistencyCopAutoCmdsOff only works
-"				for future buffers, but does not turn off the
-"				cop in existing buffers. Must remove all
-"				buffer-local autocmds, too.
-"				ENH: Do not invoke the IndentConsistencyCop if
-"				the user chose to ignore the cop's report of an
-"				inconsistency. Requires
-"				b:indentconsistencycop_result.isIgnore flag
-"				introduced in IndentConsistencyCop 1.21.
-"				ENH: Only check indent consistency after a write
-"				of the buffer, not consistency with buffer
-"				settings.
-"   1.20.006	16-Sep-2009	BUG: The same buffer-local autocmd could be
-"				created multiple times when the filetype is set
-"				repeatedly.
-"   1.20.005	10-Sep-2009	BUG: By clearing the entire
-"				"IndentConsistencyCopBufferCmds" augroup,
-"				pending autocmds for other buffers were deleted
-"				by an autocmd run in the current buffer. Now
-"				deleting only the buffer-local autocmds for the
-"				{event}s that fired.
-"				Factored out s:InstallAutoCmd().
-"				ENH: Added "check after write" feature, which
-"				triggers the IndentConsistencyCop whenever the
-"				buffer is written. To avoid blocking the user,
-"				in large buffers the check is only scheduled to
-"				run on the next 'CursorHold' event.
-"   1.10.004	13-Jun-2008	Added -bar to all commands that do not take any
-"				arguments, so that these can be chained together.
-"   1.10.003	21-Feb-2008	Avoiding multiple invocations of the
-"				IndentConsistencyCop when reloading or switching
-"				buffers. Now there's only one check per file and
-"				Vim session.
-"   1.00.002	25-Nov-2006	Added commands :IndentConsistencyCopAutoCmdsOn
-"				and :IndentConsistencyCopAutoCmdsOff
-"				to re-enable/disable autocommands.
-"	0.01	16-Oct-2006	file creation
 
 " Avoid installing twice or when in unsupported version.
 if exists('g:loaded_indentconsistencycopautocmds') || (v:version < 700)

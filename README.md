@@ -130,7 +130,7 @@ https://github.com/inkarkat/vim-IndentConsistencyCopAutoCmds/issues or email
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 1.46    RELEASEME
+##### 1.46    23-Dec-2017
 - Add yaml filetype to g:indentconsistencycop\_filetypes.
 
 ##### 1.45    09-Feb-2015
