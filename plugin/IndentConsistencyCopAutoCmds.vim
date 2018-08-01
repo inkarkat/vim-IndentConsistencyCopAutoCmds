@@ -3,7 +3,8 @@
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
 "   - Requires IndentConsistencyCop.vim (vimscript #1690).
-"   - ingo/plugin.vim autoload script
+"   - ingo/err.vim autoload script
+"   - ingo/plugin/setting.vim autoload script
 "
 " Copyright: (C) 2006-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -160,7 +161,12 @@ function! s:ExistsIndentConsistencyCop()
 endfunction
 
 function! s:IndentConsistencyCopAutoCmds( isOn )
-    let l:isEnable = a:isOn && s:ExistsIndentConsistencyCop()
+    if a:isOn && ! s:ExistsIndentConsistencyCop()
+	call ingo#err#Set(':IndentConsistencyCop command is not available')
+	return 0
+    endif
+
+    let l:isEnable = a:isOn
     augroup IndentConsistencyCopAutoCmds
 	autocmd!
 	if l:isEnable
@@ -171,17 +177,16 @@ function! s:IndentConsistencyCopAutoCmds( isOn )
     if ! l:isEnable
 	silent! autocmd! IndentConsistencyCopBufferCmds
     endif
+    return 1
 endfunction
 
-" Enable the autocommands.
+" Enable the autocommands; suppress error about non-existing command during plugin load.
 call s:IndentConsistencyCopAutoCmds(1)
 
 
 "- commands -------------------------------------------------------------------
 
-if s:ExistsIndentConsistencyCop()
-    command! -bar IndentConsistencyCopAutoCmdsOn  call <SID>IndentConsistencyCopAutoCmds(1)
-    command! -bar IndentConsistencyCopAutoCmdsOff call <SID>IndentConsistencyCopAutoCmds(0)
-endif
+command! -bar IndentConsistencyCopAutoCmdsOn  if ! <SID>IndentConsistencyCopAutoCmds(1) | echoerr ingo#err#Get() | endif
+command! -bar IndentConsistencyCopAutoCmdsOff if ! <SID>IndentConsistencyCopAutoCmds(0) | echoerr ingo#err#Get() | endif
 
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
