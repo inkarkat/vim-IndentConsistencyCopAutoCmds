@@ -5,13 +5,20 @@
 "   - Requires IndentConsistencyCop.vim (vimscript #1690).
 "   - ingo/plugin.vim autoload script
 "
-" Copyright: (C) 2006-2017 Ingo Karkat
+" Copyright: (C) 2006-2018 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
 
 " Avoid installing twice or when in unsupported version.
 if exists('g:loaded_indentconsistencycopautocmds') || (v:version < 700)
+    finish
+endif
+if ! exists('g:loaded_indentconsistencycop')
+    runtime plugin/IndentConsistencyCop.vim
+endif
+if ! exists('g:loaded_indentconsistencycop')
+    echomsg 'IndentConsistencyCopAutoCmds: You need to install the IndentConsistencyCop.vim plugin.'
     finish
 endif
 let g:loaded_indentconsistencycopautocmds = 1
