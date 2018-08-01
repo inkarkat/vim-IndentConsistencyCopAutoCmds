@@ -157,12 +157,12 @@ function! s:StartCopBasedOnFiletype( filetype )
     endif
 endfunction
 function! s:ExistsIndentConsistencyCop()
-    return exists(':IndentConsistencyCop') == 2
+    return exists(':' . matchstr(g:indentconsistencycop_AutoRunCmd, '^\s*\S\+')) == 2
 endfunction
 
 function! s:IndentConsistencyCopAutoCmds( isOn )
     if a:isOn && ! s:ExistsIndentConsistencyCop()
-	call ingo#err#Set(':IndentConsistencyCop command is not available')
+	call ingo#err#Set(printf('The IndentConsistencyCop command (%s) is not available', string(g:indentconsistencycop_AutoRunCmd)))
 	return 0
     endif
 
