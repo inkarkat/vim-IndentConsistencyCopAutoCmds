@@ -130,6 +130,12 @@ https://github.com/inkarkat/vim-IndentConsistencyCopAutoCmds/issues or email
 HISTORY
 ------------------------------------------------------------------------------
 
+##### 1.47    RELEASEME
+- Make the plugin dependency to IndentConsistencyCop.vim more robust by
+  attempting to load the plugin if it's not yet available during plugin load.
+- Check for existence of g:indentconsistencycop\_AutoRunCmd and issue error if
+  the command does not exist on :IndentConsistencyCopAutoCmdsOn.
+
 ##### 1.46    23-Dec-2017
 - Add yaml filetype to g:indentconsistencycop\_filetypes.
 
@@ -215,7 +221,7 @@ that these can be chained together.
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2006-2017 Ingo Karkat -
+Copyright: (C) 2006-2018 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat <ingo@karkat.de>
