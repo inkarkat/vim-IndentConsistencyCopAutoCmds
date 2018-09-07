@@ -31,7 +31,8 @@ if ! exists('g:indentconsistencycop_filetypes')
     let g:indentconsistencycop_filetypes = 'actionscript,ant,atom,c,cpp,cs,csh,css,dosbatch,groovy,gsp,html,java,javascript,json,jsp,lisp,mxml,pascal,perl,php,ps1,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,yaml,zsh'
 endif
 if ! exists('g:IndentConsistencyCopAutoCmds_ExclusionPredicates')
-    let g:IndentConsistencyCopAutoCmds_ExclusionPredicates = []
+    if v:version < 702 | runtime autoload/IndentConsistencyCopAutoCmds/Excludes.vim | endif  " The Funcref doesn't trigger the autoload in older Vim versions.
+    let g:IndentConsistencyCopAutoCmds_ExclusionPredicates = [function('IndentConsistencyCopAutoCmds#Excludes#FugitiveBuffers')]
 endif
 if ! exists('g:indentconsistencycop_CheckOnLoad')
     let g:indentconsistencycop_CheckOnLoad = 1

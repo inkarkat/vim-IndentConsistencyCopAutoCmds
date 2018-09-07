@@ -92,7 +92,8 @@ Funcrefs that are evaluated; if one returns 1, the buffer will be skipped. The
 current filename can be obtained from |<afile>|. >
     let g:IndentConsistencyCopAutoCmds_ExclusionPredicates =
     ['expand("<afile>:p" =~# "/tmp"', function('ExcludeScratchFiles')]
-<
+By default, scratch buffers from the fugitive.vim plugin (that show immutable
+changes) are excluded.
 
      *b:indentconsistencycop_CheckOnLoad* *g:indentconsistencycop_CheckOnLoad*
 Turn off the IndentConsistencyCop run when a buffer is loaded via >

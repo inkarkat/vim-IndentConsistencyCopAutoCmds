@@ -1,2 +1,3 @@
+autoload/IndentConsistencyCopAutoCmds/Excludes.vim
 plugin/IndentConsistencyCopAutoCmds.vim
 doc/IndentConsistencyCopAutoCmds.txt
