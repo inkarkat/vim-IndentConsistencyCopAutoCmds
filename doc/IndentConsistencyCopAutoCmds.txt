@@ -160,6 +160,9 @@ HISTORY					*IndentConsistencyCopAutoCmds-history*
   attempting to load the plugin if it's not yet available during plugin load.
 - Check for existence of g:indentconsistencycop_AutoRunCmd and issue error if
   the command does not exist on :IndentConsistencyCopAutoCmdsOn.
+- ENH: Allow to excluded certain files within supported filetypes via new
+  g:IndentConsistencyCopAutoCmds_ExclusionPredicates configuration.
+  By default, exclude scratch buffers from fugitive.vim
 
 1.46	23-Dec-2017
 - Add yaml filetype to g:indentconsistencycop_filetypes.

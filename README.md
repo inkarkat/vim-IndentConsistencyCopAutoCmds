@@ -76,6 +76,17 @@ comma-separated list of filetypes or add to the existing ones:
     let g:indentconsistencycop_filetypes = 'c,cpp,java,javascript,perl,php,python,ruby,sh,tcsh,vim'
     let g:indentconsistencycop_filetypes .= ',perl6'
 
+To exclude some files even though they have one of the filetypes in
+g:indentconsistencycop\_filetypes, you can define a List of expressions or
+Funcrefs that are evaluated; if one returns 1, the buffer will be skipped. The
+current filename can be obtained from <afile>.
+
+    let g:IndentConsistencyCopAutoCmds_ExclusionPredicates =
+    ['expand("<afile>:p" =~# "/tmp"', function('ExcludeScratchFiles')]
+
+By default, scratch buffers from the fugitive.vim plugin (that show immutable
+changes) are excluded.
+
 Turn off the IndentConsistencyCop run when a buffer is loaded via
 
     let g:indentconsistencycop_CheckOnLoad = 0
@@ -135,6 +146,9 @@ HISTORY
   attempting to load the plugin if it's not yet available during plugin load.
 - Check for existence of g:indentconsistencycop\_AutoRunCmd and issue error if
   the command does not exist on :IndentConsistencyCopAutoCmdsOn.
+- ENH: Allow to excluded certain files within supported filetypes via new
+  g:IndentConsistencyCopAutoCmds\_ExclusionPredicates configuration.
+  By default, exclude scratch buffers from fugitive.vim
 
 ##### 1.46    23-Dec-2017
 - Add yaml filetype to g:indentconsistencycop\_filetypes.
