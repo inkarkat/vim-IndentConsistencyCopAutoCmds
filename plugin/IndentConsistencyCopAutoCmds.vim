@@ -3,6 +3,7 @@
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
 "   - Requires IndentConsistencyCop.vim (vimscript #1690).
+"   - ingo/actions.vim autoload script
 "   - ingo/err.vim autoload script
 "   - ingo/plugin/setting.vim autoload script
 "
@@ -28,6 +29,9 @@ let g:loaded_indentconsistencycopautocmds = 1
 
 if ! exists('g:indentconsistencycop_filetypes')
     let g:indentconsistencycop_filetypes = 'actionscript,ant,atom,c,cpp,cs,csh,css,dosbatch,groovy,gsp,html,java,javascript,json,jsp,lisp,mxml,pascal,perl,php,ps1,python,ruby,scheme,sh,sql,tcsh,vb,vbs,vim,wsh,xhtml,xml,xsd,xslt,yaml,zsh'
+endif
+if ! exists('g:IndentConsistencyCopAutoCmds_ExclusionPredicates')
+    let g:IndentConsistencyCopAutoCmds_ExclusionPredicates = []
 endif
 if ! exists('g:indentconsistencycop_CheckOnLoad')
     let g:indentconsistencycop_CheckOnLoad = 1
@@ -103,6 +107,14 @@ function! s:StartCopAfterWrite( copCommand, event )
     endif
 endfunction
 
+function! s:IsExcludedByPredicate()
+    for l:Predicate in g:IndentConsistencyCopAutoCmds_ExclusionPredicates
+	if ingo#actions#EvaluateOrFunc(l:Predicate)
+	    return 1
+	endif
+    endfor
+    return 0
+endfunction
 function! s:InstallAutoCmd( copCommand, events, isStartOnce )
     augroup IndentConsistencyCopBufferCmds
 	if a:isStartOnce
@@ -117,7 +129,7 @@ function! s:InstallAutoCmd( copCommand, events, isStartOnce )
 endfunction
 function! s:StartCopBasedOnFiletype( filetype )
     let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ', *' )
-    if index(l:activeFiletypes, a:filetype) == -1
+    if index(l:activeFiletypes, a:filetype) == -1 || s:IsExcludedByPredicate()
 	return
     endif
 
