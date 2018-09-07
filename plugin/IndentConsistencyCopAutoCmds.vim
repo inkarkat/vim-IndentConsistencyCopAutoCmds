@@ -117,44 +117,46 @@ function! s:InstallAutoCmd( copCommand, events, isStartOnce )
 endfunction
 function! s:StartCopBasedOnFiletype( filetype )
     let l:activeFiletypes = split( g:indentconsistencycop_filetypes, ', *' )
-    if count( l:activeFiletypes, a:filetype ) > 0
-	" Modelines have not been processed yet, but we need them because they
-	" very likely change the buffer indent settings. So we set up a second
-	" autocmd BufWinEnter (which is processed after the modelines), that
-	" will trigger the IndentConsistencyCop and remove itself (i.e. a "run
-	" once" autocmd).
-	" When a buffer is loaded, the FileType event will fire before the
-	" BufWinEnter event, so that the IndentConsistencyCop is triggered.
-	" When the filetype changes in an existing buffer, the BufWinEnter
-	" event is not fired. We use the CursorHold event to trigger the
-	" IndentConsistencyCop when the user pauses for a brief period.
-	" (There's no better event for that.)
-
-	let l:isCheckOnLoad = ingo#plugin#setting#GetBufferLocal('indentconsistencycop_CheckOnLoad')
-	if l:isCheckOnLoad
-	    " Check both indent consistency and consistency with buffer indent
-	    " settings when a file is loaded.
-	    call s:InstallAutoCmd(g:indentconsistencycop_AutoRunCmd, ['BufWinEnter', 'CursorHold'], 1)
-	endif
-	if ingo#plugin#setting#GetBufferLocal('indentconsistencycop_CheckAfterWrite')
-	    if l:isCheckOnLoad
-		" Only check indent consistency after a write of the buffer. The
-		" user already was alerted to inconsistent buffer settings when
-		" the file was loaded; editing the file did't change anything in
-		" that regard, so we'd better not bother the user with this
-		" information repeatedly.
-		let l:cmd = 'IndentRangeConsistencyCop'
-	    else
-		" For the first write, perform the full check, then only check
-		" indent consistency on subsequent writes; it's enough to alert
-		" the user once.
-		let l:cmd = 'if exists("b:indentconsistencycop_is_checked") | IndentRangeConsistencyCop | else | ' . g:indentconsistencycop_AutoRunCmd . ' | endif'
-	    endif
-
-	    call s:InstallAutoCmd(l:cmd, ['BufWritePost'], 0)
-	endif
-"****D execute 'autocmd IndentConsistencyCopBufferCmds' | call confirm("Active IndentConsistencyCopBufferCmds")
+    if index(l:activeFiletypes, a:filetype) == -1
+	return
     endif
+
+    " Modelines have not been processed yet, but we need them because they
+    " very likely change the buffer indent settings. So we set up a second
+    " autocmd BufWinEnter (which is processed after the modelines), that
+    " will trigger the IndentConsistencyCop and remove itself (i.e. a "run
+    " once" autocmd).
+    " When a buffer is loaded, the FileType event will fire before the
+    " BufWinEnter event, so that the IndentConsistencyCop is triggered.
+    " When the filetype changes in an existing buffer, the BufWinEnter
+    " event is not fired. We use the CursorHold event to trigger the
+    " IndentConsistencyCop when the user pauses for a brief period.
+    " (There's no better event for that.)
+
+    let l:isCheckOnLoad = ingo#plugin#setting#GetBufferLocal('indentconsistencycop_CheckOnLoad')
+    if l:isCheckOnLoad
+	" Check both indent consistency and consistency with buffer indent
+	" settings when a file is loaded.
+	call s:InstallAutoCmd(g:indentconsistencycop_AutoRunCmd, ['BufWinEnter', 'CursorHold'], 1)
+    endif
+    if ingo#plugin#setting#GetBufferLocal('indentconsistencycop_CheckAfterWrite')
+	if l:isCheckOnLoad
+	    " Only check indent consistency after a write of the buffer. The
+	    " user already was alerted to inconsistent buffer settings when
+	    " the file was loaded; editing the file did't change anything in
+	    " that regard, so we'd better not bother the user with this
+	    " information repeatedly.
+	    let l:cmd = 'IndentRangeConsistencyCop'
+	else
+	    " For the first write, perform the full check, then only check
+	    " indent consistency on subsequent writes; it's enough to alert
+	    " the user once.
+	    let l:cmd = 'if exists("b:indentconsistencycop_is_checked") | IndentRangeConsistencyCop | else | ' . g:indentconsistencycop_AutoRunCmd . ' | endif'
+	endif
+
+	call s:InstallAutoCmd(l:cmd, ['BufWritePost'], 0)
+    endif
+"****D execute 'autocmd IndentConsistencyCopBufferCmds' | call confirm("Active IndentConsistencyCopBufferCmds")
 endfunction
 function! s:ExistsIndentConsistencyCop()
     return exists(':' . matchstr(g:indentconsistencycop_AutoRunCmd, '^\s*\S\+')) == 2
