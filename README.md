@@ -1,4 +1,4 @@
-INDENT CONSISTENCY COP AUTO CMDS   
+INDENT CONSISTENCY COP AUTO CMDS
 ===============================================================================
 _by Ingo Karkat_
 
@@ -62,7 +62,7 @@ To uninstall, use the :RmVimball command.
 
 - Requires Vim 7.0 or higher.
 - Requires the IndentConsistencyCop.vim plugin ([vimscript #1690](http://www.vim.org/scripts/script.php?script_id=1690)).
-- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.010 or
+- Requires the ingo-library.vim plugin ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)), version 1.036 or
   higher.
 
 CONFIGURATION
@@ -141,7 +141,7 @@ https://github.com/inkarkat/vim-IndentConsistencyCopAutoCmds/issues or email
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 1.47    RELEASEME
+##### 1.50    RELEASEME
 - Make the plugin dependency to IndentConsistencyCop.vim more robust by
   attempting to load the plugin if it's not yet available during plugin load.
 - Check for existence of g:indentconsistencycop\_AutoRunCmd and issue error if
@@ -149,6 +149,10 @@ HISTORY
 - ENH: Allow to excluded certain files within supported filetypes via new
   g:IndentConsistencyCopAutoCmds\_ExclusionPredicates configuration.
   By default, exclude scratch buffers from fugitive.vim
+- ENH: Offer a "Ignore forever" choice that turns off triggering for the
+  current file persistently across Vim sessions.
+
+__You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.036!__
 
 ##### 1.46    23-Dec-2017
 - Add yaml filetype to g:indentconsistencycop\_filetypes.
@@ -160,7 +164,9 @@ HISTORY
 - Allow buffer-local config for indentconsistencycop\_CheckOnLoad,
   indentconsistencycop\_CheckAfterWrite,
   indentconsistencycop\_CheckAfterWriteMaxLinesForImmediateCheck.
-- Add dependency to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)). __You need to separately
+- Add dependency to ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)).
+
+__You need to separately
   install ingo-library ([vimscript #4433](http://www.vim.org/scripts/script.php?script_id=4433)) version 1.010 (or higher)!__
 
 ##### 1.42    27-Feb-2013
@@ -235,7 +241,7 @@ that these can be chained together.
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2006-2018 Ingo Karkat -
+Copyright: (C) 2006-2019 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
 Maintainer:     Ingo Karkat <ingo@karkat.de>

@@ -2,10 +2,8 @@
 "
 " DEPENDENCIES:
 "   - Requires Vim 7.0 or higher.
-"   - Requires IndentConsistencyCop.vim (vimscript #1690).
-"   - ingo/actions.vim autoload script
-"   - ingo/err.vim autoload script
-"   - ingo/plugin/setting.vim autoload script
+"   - IndentConsistencyCop.vim plugin
+"   - ingo-library.vim plugin
 "
 " Copyright: (C) 2006-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
@@ -24,6 +22,8 @@ if ! exists('g:loaded_indentconsistencycop')
     finish
 endif
 let g:loaded_indentconsistencycopautocmds = 1
+let s:save_cpo = &cpo
+set cpo&vim
 
 "- configuration --------------------------------------------------------------
 
@@ -50,8 +50,25 @@ endif
 
 "- functions ------------------------------------------------------------------
 
+function! s:GetFilespec()
+    return ingo#fs#path#Canonicalize(expand('%:p'))
+endfunction
+function! IndentConsistencyCopAutoCmds#IgnoreForever()
+    if empty(bufname(''))
+	call ingo#msg#ErrorMsg('Cannot add unnamed buffer to blacklist')
+	return 0
+    endif
+
+    call ingo#plugin#persistence#Add('INDENTCONSISTENCYCOPAUTOCMDS_BLACKLIST', s:GetFilespec(), 1)
+endfunction
+function! s:IsContainedInBlacklist()
+    return has_key(ingo#plugin#persistence#Load('INDENTCONSISTENCYCOPAUTOCMDS_BLACKLIST', {}), s:GetFilespec())
+endfunction
+
+
 function! s:IsDisabledHere()
-    return exists('b:indentconsistencycop_SkipChecks') && b:indentconsistencycop_SkipChecks
+    return (exists('b:indentconsistencycop_SkipChecks') && b:indentconsistencycop_SkipChecks) ||
+    \   s:IsContainedInBlacklist()
 endfunction
 function! s:StartCopOnce( copCommand )
     if s:IsDisabledHere()
@@ -202,9 +219,25 @@ endfunction
 call s:IndentConsistencyCopAutoCmds(1)
 
 
+"- integration -----------------------------------------------------------------
+
+if ! exists('g:IndentConsistencyCop_MenuExtensions')
+    let g:IndentConsistencyCop_MenuExtensions = {}
+endif
+if ingo#plugin#persistence#CanPersist()
+    let g:IndentConsistencyCop_MenuExtensions['Ignore forever'] = {
+    \   'priority': 100,
+    \   'choice': 'Ignore &forever',
+    \   'Action': function('IndentConsistencyCopAutoCmds#IgnoreForever'),
+    \}
+endif
+
+
 "- commands -------------------------------------------------------------------
 
 command! -bar IndentConsistencyCopAutoCmdsOn  if ! <SID>IndentConsistencyCopAutoCmds(1) | echoerr ingo#err#Get() | endif
 command! -bar IndentConsistencyCopAutoCmdsOff if ! <SID>IndentConsistencyCopAutoCmds(0) | echoerr ingo#err#Get() | endif
 
+let &cpo = s:save_cpo
+unlet s:save_cpo
 " vim: set ts=8 sts=4 sw=4 noexpandtab ff=unix fdm=syntax :
