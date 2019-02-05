@@ -7,7 +7,7 @@
 "   - ingo/err.vim autoload script
 "   - ingo/plugin/setting.vim autoload script
 "
-" Copyright: (C) 2006-2018 Ingo Karkat
+" Copyright: (C) 2006-2019 Ingo Karkat
 "   The VIM LICENSE applies to this script; see ':help copyright'.
 "
 " Maintainer:	Ingo Karkat <ingo@karkat.de>
@@ -50,8 +50,11 @@ endif
 
 "- functions ------------------------------------------------------------------
 
+function! s:IsDisabledHere()
+    return exists('b:indentconsistencycop_SkipChecks') && b:indentconsistencycop_SkipChecks
+endfunction
 function! s:StartCopOnce( copCommand )
-    if exists('b:indentconsistencycop_SkipChecks') && b:indentconsistencycop_SkipChecks
+    if s:IsDisabledHere()
 	" The user explicitly disabled checking for this buffer.
 	return
     endif
@@ -81,7 +84,7 @@ function! s:StartCopAfterWrite( copCommand, event )
 	return
     endif
 
-    if exists('b:indentconsistencycop_SkipChecks') && b:indentconsistencycop_SkipChecks
+    if s:IsDisabledHere()
 	" The user explicitly disabled checking for this buffer.
 	return
     endif
