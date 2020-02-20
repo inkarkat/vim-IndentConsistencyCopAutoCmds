@@ -79,7 +79,7 @@ comma-separated list of filetypes or add to the existing ones:
 To exclude some files even though they have one of the filetypes in
 g:indentconsistencycop\_filetypes, you can define a List of expressions or
 Funcrefs that are evaluated; if one returns 1, the buffer will be skipped. The
-current filename can be obtained from <afile>.
+current filename can be obtained from &lt;afile&gt;.
 
     let g:IndentConsistencyCopAutoCmds_ExclusionPredicates =
     ['expand("<afile>:p" =~# "/tmp"', function('ExcludeScratchFiles')]
@@ -141,7 +141,7 @@ https://github.com/inkarkat/vim-IndentConsistencyCopAutoCmds/issues or email
 HISTORY
 ------------------------------------------------------------------------------
 
-##### 1.50    RELEASEME
+##### 1.50    20-Feb-2020
 - Make the plugin dependency to IndentConsistencyCop.vim more robust by
   attempting to load the plugin if it's not yet available during plugin load.
 - Check for existence of g:indentconsistencycop\_AutoRunCmd and issue error if
@@ -160,7 +160,7 @@ __You need to update to ingo-library ([vimscript #4433](http://www.vim.org/scrip
 ##### 1.45    09-Feb-2015
 - Add several more filetypes to g:indentconsistencycop\_filetypes.
 - FIX: Install of continuous buffer autocmd never worked because of missing
-  <buffer> target.
+  &lt;buffer&gt; target.
 - Allow buffer-local config for indentconsistencycop\_CheckOnLoad,
   indentconsistencycop\_CheckAfterWrite,
   indentconsistencycop\_CheckAfterWriteMaxLinesForImmediateCheck.
@@ -241,7 +241,7 @@ that these can be chained together.
 - Started development.
 
 ------------------------------------------------------------------------------
-Copyright: (C) 2006-2019 Ingo Karkat -
+Copyright: (C) 2006-2020 Ingo Karkat -
 The [VIM LICENSE](http://vimdoc.sourceforge.net/htmldoc/uganda.html#license) applies to this plugin.
 
-Maintainer:     Ingo Karkat <ingo@karkat.de>
+Maintainer:     Ingo Karkat &lt;ingo@karkat.de&gt;
