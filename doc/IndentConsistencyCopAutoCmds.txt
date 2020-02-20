@@ -71,7 +71,7 @@ DEPENDENCIES			   *IndentConsistencyCopAutoCmds-dependencies*
 
 - Requires Vim 7.0 or higher.
 - Requires the IndentConsistencyCop.vim plugin (vimscript #1690).
-- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.010 or
+- Requires the |ingo-library.vim| plugin (vimscript #4433), version 1.036 or
   higher.
 
 ==============================================================================
@@ -85,6 +85,16 @@ comma-separated list of filetypes or add to the existing ones: >
     let g:indentconsistencycop_filetypes = 'c,cpp,java,javascript,perl,php,python,ruby,sh,tcsh,vim'
     let g:indentconsistencycop_filetypes .= ',perl6'
 <
+			  *g:IndentConsistencyCopAutoCmds_ExclusionPredicates*
+To exclude some files even though they have one of the filetypes in
+|g:indentconsistencycop_filetypes|, you can define a List of expressions or
+Funcrefs that are evaluated; if one returns 1, the buffer will be skipped. The
+current filename can be obtained from |<afile>|. >
+    let g:IndentConsistencyCopAutoCmds_ExclusionPredicates =
+    ['expand("<afile>:p" =~# "/tmp"', function('ExcludeScratchFiles')]
+By default, scratch buffers from the fugitive.vim plugin (that show immutable
+changes) are excluded.
+
      *b:indentconsistencycop_CheckOnLoad* *g:indentconsistencycop_CheckOnLoad*
 Turn off the IndentConsistencyCop run when a buffer is loaded via >
     let g:indentconsistencycop_CheckOnLoad = 0
@@ -144,6 +154,18 @@ https://github.com/inkarkat/vim-IndentConsistencyCopAutoCmds/issues or email
 
 ==============================================================================
 HISTORY					*IndentConsistencyCopAutoCmds-history*
+
+1.50	20-Feb-2020
+- Make the plugin dependency to IndentConsistencyCop.vim more robust by
+  attempting to load the plugin if it's not yet available during plugin load.
+- Check for existence of g:indentconsistencycop_AutoRunCmd and issue error if
+  the command does not exist on :IndentConsistencyCopAutoCmdsOn.
+- ENH: Allow to excluded certain files within supported filetypes via new
+  g:IndentConsistencyCopAutoCmds_ExclusionPredicates configuration.
+  By default, exclude scratch buffers from fugitive.vim
+- ENH: Offer a "Ignore forever" choice that turns off triggering for the
+  current file persistently across Vim sessions.
+  *** You need to update to ingo-library (vimscript #4433) version 1.036! ***
 
 1.46	23-Dec-2017
 - Add yaml filetype to g:indentconsistencycop_filetypes.
@@ -230,7 +252,7 @@ First published version.
 Started development.
 
 ==============================================================================
-Copyright: (C) 2006-2017 Ingo Karkat
+Copyright: (C) 2006-2020 Ingo Karkat
 The VIM LICENSE applies to this plugin; see |copyright|.
 
 Maintainer:	Ingo Karkat <ingo@karkat.de>
